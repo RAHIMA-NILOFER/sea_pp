@@ -1,0 +1,4024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Seafloor Intelligence — autonomous subsea survey and sensor intelligence platform"
+    >
+
+    <title>Seafloor Intelligence</title>
+
+    <style>
+        /* =========================================================
+           SEAFLOOR INTELLIGENCE
+           STRUCTURED UI
+        ========================================================= */
+
+        :root {
+            --bg: #03121b;
+            --bg-soft: #061923;
+            --panel: #071e29;
+            --panel-2: #09232f;
+
+            --line: #123b4b;
+            --line-bright: #15566b;
+
+            --cyan: #00d9ff;
+            --cyan-soft: #54c9e8;
+
+            --green: #20e6a1;
+            --yellow: #f5c451;
+            --orange: #ff9d45;
+            --red: #ff5e68;
+            --purple: #a678ff;
+
+            --text: #edf7fb;
+            --text-soft: #a9c7d5;
+            --text-muted: #62879a;
+
+            --sidebar-width: 270px;
+            --header-height: 88px;
+
+            --radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            min-height: 100%;
+            background: var(--bg);
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at 75% 10%,
+                    rgba(0, 217, 255, 0.055),
+                    transparent 30%
+                ),
+                var(--bg);
+
+            color: var(--text);
+
+            font-family:
+                Inter,
+                ui-sans-serif,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            overflow-x: hidden;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* =========================================================
+           APPLICATION
+        ========================================================= */
+
+        .app {
+            min-height: 100vh;
+        }
+
+        /* =========================================================
+           SIDEBAR
+        ========================================================= */
+
+        .sidebar {
+            position: fixed;
+
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            width: var(--sidebar-width);
+
+            padding: 24px 18px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #061b26 0%,
+                    #03151f 100%
+                );
+
+            border-right: 1px solid var(--line);
+
+            z-index: 100;
+
+            display: flex;
+            flex-direction: column;
+
+            overflow-y: auto;
+        }
+
+        /* =========================================================
+           BRAND
+        ========================================================= */
+
+        .brand {
+            display: flex;
+            align-items: center;
+
+            gap: 13px;
+
+            padding: 2px 8px 22px;
+
+            border-bottom: 1px solid var(--line);
+        }
+
+        .brand-mark {
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid var(--cyan);
+            border-radius: 13px;
+
+            color: var(--cyan);
+
+            font-weight: 900;
+            font-size: 17px;
+
+            letter-spacing: 0.08em;
+
+            background:
+                rgba(0, 217, 255, 0.04);
+
+            box-shadow:
+                0 0 25px rgba(0, 217, 255, 0.08);
+        }
+
+        .brand-copy {
+            display: flex;
+            flex-direction: column;
+
+            gap: 3px;
+        }
+
+        .brand-copy strong {
+            font-size: 14px;
+
+            letter-spacing: 0.08em;
+
+            color: var(--text);
+        }
+
+        .brand-copy span {
+            color: var(--cyan-soft);
+
+            font-size: 8px;
+
+            letter-spacing: 0.18em;
+
+            font-weight: 700;
+        }
+
+        /* =========================================================
+           SYSTEM STATUS
+        ========================================================= */
+
+        .system-card {
+            margin: 22px 2px 24px;
+
+            padding: 15px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            border: 1px solid var(--line);
+
+            border-radius: 13px;
+
+            background:
+                rgba(5, 30, 41, 0.9);
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+
+            flex: 0 0 auto;
+
+            border-radius: 50%;
+
+            background: var(--green);
+
+            box-shadow:
+                0 0 12px rgba(32, 230, 161, 0.7);
+        }
+
+        .status-normal {
+            background: var(--green);
+            box-shadow:
+                0 0 12px rgba(32, 230, 161, 0.7);
+        }
+
+        .status-warning {
+            background: var(--yellow);
+            box-shadow:
+                0 0 12px rgba(245, 196, 81, 0.65);
+        }
+
+        .status-offline {
+            background: #536b77;
+            box-shadow: none;
+        }
+
+        .system-copy {
+            display: flex;
+            flex-direction: column;
+
+            gap: 3px;
+        }
+
+        .system-copy strong {
+            font-size: 11px;
+
+            letter-spacing: 0.05em;
+        }
+
+        .system-copy span {
+            color: var(--text-muted);
+
+            font-size: 8px;
+
+            letter-spacing: 0.14em;
+        }
+
+        /* =========================================================
+           NAVIGATION
+        ========================================================= */
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+
+            gap: 5px;
+        }
+
+        .nav-section-title {
+            margin: 13px 11px 7px;
+
+            color: #4c7182;
+
+            font-size: 8px;
+
+            font-weight: 800;
+
+            letter-spacing: 0.2em;
+        }
+
+        .nav-item {
+            width: 100%;
+
+            min-height: 50px;
+
+            padding: 10px 12px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 13px;
+
+            border: 1px solid transparent;
+
+            border-radius: 12px;
+
+            background: transparent;
+
+            color: #759caf;
+
+            text-align: left;
+
+            transition:
+                background 0.18s ease,
+                border-color 0.18s ease,
+                color 0.18s ease,
+                transform 0.18s ease;
+        }
+
+        .nav-item:hover {
+            color: var(--text);
+
+            background:
+                rgba(0, 217, 255, 0.035);
+
+            border-color:
+                rgba(0, 217, 255, 0.12);
+        }
+
+        .nav-item.active {
+            color: var(--cyan);
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(0, 217, 255, 0.10),
+                    rgba(0, 217, 255, 0.025)
+                );
+
+            border-color:
+                rgba(0, 217, 255, 0.45);
+
+            box-shadow:
+                inset 3px 0 0 var(--cyan);
+        }
+
+        .nav-icon {
+            width: 24px;
+
+            text-align: center;
+
+            color: inherit;
+
+            font-size: 16px;
+        }
+
+        .nav-item > span:last-child {
+            font-size: 12px;
+
+            font-weight: 650;
+        }
+
+        /* =========================================================
+           PROBE CARD
+        ========================================================= */
+
+        .probe-card {
+            margin-top: auto;
+
+            padding: 15px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 11px;
+
+            border: 1px solid var(--line);
+
+            border-radius: 13px;
+
+            background:
+                rgba(5, 29, 40, 0.9);
+        }
+
+        .probe-indicator {
+            width: 9px;
+            height: 9px;
+
+            border-radius: 50%;
+
+            background: var(--green);
+
+            box-shadow:
+                0 0 12px rgba(32, 230, 161, 0.7);
+        }
+
+        .probe-card strong {
+            display: block;
+
+            font-size: 11px;
+
+            letter-spacing: 0.08em;
+        }
+
+        .probe-card span {
+            display: block;
+
+            margin-top: 3px;
+
+            color: var(--text-muted);
+
+            font-size: 8px;
+        }
+
+        /* =========================================================
+           MAIN
+        ========================================================= */
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+
+            min-height: 100vh;
+
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        /* =========================================================
+           TOP BAR
+        ========================================================= */
+
+        .topbar {
+            min-height: var(--header-height);
+
+            padding: 18px 34px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            border-bottom: 1px solid var(--line);
+
+            background:
+                rgba(3, 18, 27, 0.94);
+
+            backdrop-filter: blur(12px);
+
+            position: sticky;
+            top: 0;
+
+            z-index: 50;
+        }
+
+        .page-heading {
+            min-width: 0;
+        }
+
+        .eyebrow {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: var(--cyan);
+
+            font-size: 8px;
+
+            font-weight: 800;
+
+            letter-spacing: 0.22em;
+        }
+
+        .page-heading h1 {
+            margin: 0;
+
+            font-size: 25px;
+
+            line-height: 1.15;
+
+            letter-spacing: -0.025em;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+
+            gap: 22px;
+        }
+
+        .live-time {
+            display: flex;
+            flex-direction: column;
+
+            align-items: flex-end;
+
+            gap: 2px;
+        }
+
+        .live-time strong {
+            font-size: 14px;
+        }
+
+        .live-time span {
+            color: var(--text-muted);
+
+            font-size: 8px;
+
+            letter-spacing: 0.08em;
+        }
+
+        .mode-badge {
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 9px 13px;
+
+            border: 1px solid var(--line-bright);
+
+            border-radius: 999px;
+
+            color: var(--text-soft);
+
+            font-size: 8px;
+
+            font-weight: 700;
+
+            letter-spacing: 0.12em;
+        }
+
+        /* =========================================================
+           CONTENT
+        ========================================================= */
+
+        .content-area {
+            padding: 32px 34px 45px;
+
+            max-width: 1550px;
+
+            margin: 0 auto;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+
+            animation: pageIn 0.2s ease;
+        }
+
+        @keyframes pageIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* =========================================================
+           PAGE HEADER
+        ========================================================= */
+
+        .hero-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+
+            gap: 25px;
+
+            margin-bottom: 25px;
+        }
+
+        .section-label,
+        .panel-label {
+            color: var(--cyan);
+
+            font-size: 8px;
+
+            font-weight: 850;
+
+            letter-spacing: 0.19em;
+        }
+
+        .hero-row h2 {
+            margin: 7px 0 7px;
+
+            font-size: 27px;
+
+            line-height: 1.15;
+
+            letter-spacing: -0.03em;
+        }
+
+        .section-description {
+            margin: 0;
+
+            color: var(--text-muted);
+
+            font-size: 12px;
+        }
+
+        /* =========================================================
+           BUTTONS
+        ========================================================= */
+
+        .secondary-button,
+        .primary-button {
+            border-radius: 9px;
+
+            padding: 10px 15px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            transition:
+                background 0.2s,
+                border-color 0.2s;
+        }
+
+        .secondary-button {
+            color: var(--text-soft);
+
+            border: 1px solid var(--line-bright);
+
+            background:
+                rgba(7, 31, 42, 0.8);
+        }
+
+        .secondary-button:hover {
+            color: var(--cyan);
+
+            border-color: var(--cyan);
+
+            background:
+                rgba(0, 217, 255, 0.06);
+        }
+
+        .primary-button {
+            color: #00131b;
+
+            border: 1px solid var(--cyan);
+
+            background: var(--cyan);
+        }
+
+        .primary-button:hover {
+            background: #52e7ff;
+        }
+
+        .primary-button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        /* =========================================================
+           METRIC CARDS
+        ========================================================= */
+
+        .metric-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 14px;
+
+            margin-bottom: 18px;
+        }
+
+        .metric-card {
+            min-height: 145px;
+
+            padding: 18px;
+
+            border: 1px solid var(--line);
+
+            border-radius: var(--radius);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(8, 34, 46, 0.98),
+                    rgba(4, 23, 32, 0.98)
+                );
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+        .metric-card::after {
+            content: "";
+
+            position: absolute;
+
+            width: 120px;
+            height: 120px;
+
+            right: -60px;
+            bottom: -70px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(0, 217, 255, 0.045);
+        }
+
+        .metric-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metric-label {
+            color: var(--text-muted);
+
+            font-size: 8px;
+
+            font-weight: 800;
+
+            letter-spacing: 0.17em;
+        }
+
+        .metric-symbol {
+            color: var(--cyan);
+
+            font-size: 16px;
+        }
+
+        .metric-value {
+            display: flex;
+            align-items: baseline;
+
+            gap: 5px;
+
+            margin-top: 17px;
+        }
+
+        .metric-value span {
+            color: var(--text);
+
+            font-size: 31px;
+
+            line-height: 1;
+
+            font-weight: 800;
+
+            letter-spacing: -0.04em;
+        }
+
+        .metric-value small {
+            color: var(--text-muted);
+
+            font-size: 10px;
+        }
+
+        .metric-footer {
+            display: flex;
+            align-items: center;
+
+            gap: 7px;
+
+            margin-top: 17px;
+
+            color: var(--text-muted);
+
+            font-size: 8px;
+        }
+
+        .sensor-state-dot {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+
+            background: var(--green);
+        }
+
+        .inductive-card .metric-value strong {
+            color: var(--green);
+            font-size: 21px;
+            letter-spacing: 0;
+        }
+
+        .inductive-card.metal-detected {
+            border-color: rgba(255, 94, 104, 0.75);
+            background: rgba(255, 94, 104, 0.1);
+        }
+
+        .inductive-card.metal-detected .metric-value strong {
+            color: var(--red);
+        }
+
+        .sensor-state-dot.metal-detected {
+            background: var(--red);
+            box-shadow: 0 0 12px rgba(255, 94, 104, 0.9);
+        }
+
+        /* =========================================================
+           PANELS
+        ========================================================= */
+
+        .panel {
+            padding: 20px;
+
+            border: 1px solid var(--line);
+
+            border-radius: var(--radius);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(7, 31, 42, 0.96),
+                    rgba(4, 22, 31, 0.96)
+                );
+
+            min-width: 0;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 20px;
+        }
+
+        .panel-header h3 {
+            margin: 5px 0 0;
+
+            font-size: 16px;
+        }
+
+        .live-tag {
+            padding: 6px 9px;
+
+            border: 1px solid rgba(32, 230, 161, 0.28);
+
+            border-radius: 999px;
+
+            color: var(--green);
+
+            font-size: 7px;
+
+            font-weight: 800;
+
+            letter-spacing: 0.13em;
+        }
+
+        /* =========================================================
+           DASHBOARD INTELLIGENCE
+        ========================================================= */
+
+        .dashboard-grid {
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1.15fr)
+                minmax(0, 0.85fr);
+
+            gap: 14px;
+
+            margin-bottom: 14px;
+        }
+
+        .anomaly-panel {
+            min-height: 300px;
+        }
+
+        .anomaly-main {
+            display: grid;
+
+            grid-template-columns:
+                180px minmax(0, 1fr);
+
+            gap: 25px;
+
+            align-items: center;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(0, 217, 255, 0.07),
+                    rgba(0, 217, 255, 0.015) 60%,
+                    transparent 61%
+                );
+
+            border:
+                8px solid rgba(0, 217, 255, 0.10);
+
+            box-shadow:
+                inset 0 0 30px rgba(0, 217, 255, 0.04);
+        }
+
+        .score-circle > div {
+            text-align: center;
+        }
+
+        .score-circle strong {
+            display: block;
+
+            font-size: 34px;
+
+            color: var(--cyan);
+        }
+
+        .score-circle span {
+            color: var(--text-muted);
+
+            font-size: 7px;
+
+            letter-spacing: 0.15em;
+        }
+
+        .anomaly-details {
+            display: flex;
+            flex-direction: column;
+
+            gap: 13px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 15px;
+
+            color: var(--text-muted);
+
+            font-size: 10px;
+        }
+
+        .detail-row strong {
+            color: var(--text-soft);
+
+            font-size: 10px;
+        }
+
+        .progress-track {
+            height: 6px;
+
+            overflow: hidden;
+
+            border-radius: 999px;
+
+            background:
+                #0d3040;
+        }
+
+        .progress-track.large {
+            height: 9px;
+        }
+
+        .progress-fill {
+            width: 0%;
+
+            height: 100%;
+
+            border-radius: inherit;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--cyan),
+                    var(--green)
+                );
+
+            transition: width 0.35s ease;
+        }
+
+        .anomaly-bar-section {
+            margin-top: 22px;
+
+            padding-top: 17px;
+
+            border-top: 1px solid var(--line);
+        }
+
+        .bar-header {
+            display: flex;
+            justify-content: space-between;
+
+            margin-bottom: 9px;
+
+            color: var(--text-muted);
+
+            font-size: 8px;
+
+            letter-spacing: 0.12em;
+        }
+
+        .bar-header strong {
+            color: var(--text-soft);
+        }
+
+        /* =========================================================
+           CLASSIFICATION
+        ========================================================= */
+
+        .classification {
+            display: inline-flex;
+
+            padding: 6px 10px;
+
+            border-radius: 999px;
+
+            font-size: 8px;
+
+            font-weight: 850;
+
+            letter-spacing: 0.13em;
+        }
+
+        .history-normal {
+            color: var(--green);
+            background: rgba(32, 230, 161, 0.08);
+        }
+
+        .history-watch {
+            color: var(--yellow);
+            background: rgba(245, 196, 81, 0.09);
+        }
+
+        .history-critical {
+            color: var(--red);
+            background: rgba(255, 94, 104, 0.09);
+        }
+
+        /* =========================================================
+           NEXT SCAN
+        ========================================================= */
+
+        .target-box {
+            padding: 18px;
+
+            border: 1px solid rgba(0, 217, 255, 0.18);
+
+            border-radius: 12px;
+
+            background:
+                rgba(0, 217, 255, 0.025);
+        }
+
+        .target-label {
+            color: var(--cyan);
+
+            font-size: 7px;
+
+            font-weight: 800;
+
+            letter-spacing: 0.16em;
+        }
+
+        .target-coordinates,
+        .target-big {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 12px;
+
+            margin-top: 14px;
+        }
+
+        .target-coordinates > div,
+        .target-big > div {
+            padding: 13px;
+
+            border: 1px solid var(--line);
+
+            border-radius: 9px;
+
+            background: #041923;
+        }
+
+        .target-coordinates span,
+        .target-big span {
+            display: block;
+
+            color: var(--text-muted);
+
+            font-size: 8px;
+        }
+
+        .target-coordinates strong,
+        .target-big strong {
+            display: block;
+
+            margin-top: 6px;
+
+            color: var(--cyan);
+
+            font-size: 27px;
+        }
+
+        .information-gain {
+            margin-top: 18px;
+        }
+
+        .recommendation-text {
+            margin: 17px 0 0;
+
+            color: var(--text-soft);
+
+            font-size: 11px;
+
+            line-height: 1.65;
+        }
+
+        /* =========================================================
+           POSITION MAP
+        ========================================================= */
+
+        .position-panel {
+            min-height: 310px;
+        }
+
+        .position-content {
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1.4fr)
+                minmax(220px, 0.6fr);
+
+            gap: 18px;
+        }
+
+        .position-map,
+        .survey-map-large {
+            position: relative;
+
+            min-height: 250px;
+
+            overflow: hidden;
+
+            border: 1px solid var(--line);
+
+            border-radius: 11px;
+
+            background:
+                #041b26;
+        }
+
+        .position-map::before,
+        .survey-map-large::before {
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            background-image:
+                linear-gradient(
+                    rgba(0, 217, 255, 0.055) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(0, 217, 255, 0.055) 1px,
+                    transparent 1px
+                );
+
+            background-size: 38px 38px;
+        }
+
+        .position-map::after,
+        .survey-map-large::after {
+            content: "";
+
+            position: absolute;
+
+            left: 50%;
+            top: 0;
+            bottom: 0;
+
+            width: 1px;
+
+            background: rgba(0, 217, 255, 0.12);
+        }
+
+        .map-axis.x-axis {
+            position: absolute;
+
+            top: 50%;
+            left: 0;
+            right: 0;
+
+            height: 1px;
+
+            background: rgba(0, 217, 255, 0.12);
+
+            z-index: 2;
+        }
+
+        .map-label {
+            position: absolute;
+
+            z-index: 4;
+
+            color: #4d7180;
+
+            font-size: 8px;
+
+            font-weight: 700;
+        }
+
+        .map-top {
+            top: 10px;
+            left: 12px;
+        }
+
+        .map-bottom {
+            bottom: 10px;
+            right: 12px;
+        }
+
+        .probe-marker {
+            position: absolute;
+
+            left: 50%;
+            top: 50%;
+
+            width: 21px;
+            height: 21px;
+
+            transform: translate(-50%, -50%);
+
+            border: 2px solid var(--cyan);
+
+            border-radius: 50%;
+
+            background:
+                rgba(0, 217, 255, 0.08);
+
+            box-shadow:
+                0 0 25px rgba(0, 217, 255, 0.4);
+
+            z-index: 5;
+        }
+
+        .probe-marker span {
+            position: absolute;
+
+            width: 5px;
+            height: 5px;
+
+            left: 50%;
+            top: 50%;
+
+            transform: translate(-50%, -50%);
+
+            border-radius: 50%;
+
+            background: var(--cyan);
+        }
+
+        .next-marker {
+            position: absolute;
+
+            left: 72%;
+            top: 32%;
+
+            width: 28px;
+            height: 28px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px dashed var(--yellow);
+
+            border-radius: 50%;
+
+            color: var(--yellow);
+
+            font-size: 17px;
+
+            z-index: 5;
+        }
+
+        .position-data {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 10px;
+
+            align-content: center;
+        }
+
+        .coordinate-card {
+            padding: 13px;
+
+            border: 1px solid var(--line);
+
+            border-radius: 9px;
+
+            background:
+                rgba(4, 25, 35, 0.9);
+        }
+
+        .coordinate-card span {
+            display: block;
+
+            color: var(--text-muted);
+
+            font-size: 7px;
+
+            letter-spacing: 0.13em;
+        }
+
+        .coordinate-card strong {
+            display: block;
+
+            margin-top: 6px;
+
+            font-size: 13px;
+
+            color: var(--text-soft);
+        }
+
+        /* =========================================================
+           SENSOR PAGE
+        ========================================================= */
+
+        .sensor-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 14px;
+        }
+
+        .sensor-panel {
+            min-height: 150px;
+        }
+
+        .sensor-header {
+            display: flex;
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .sensor-header span {
+            color: var(--text-muted);
+
+            font-size: 8px;
+
+            font-weight: 800;
+
+            letter-spacing: 0.16em;
+        }
+
+        .sensor-header strong {
+            color: var(--cyan);
+
+            font-size: 22px;
+        }
+
+        .sensor-bar {
+            height: 8px;
+
+            margin: 25px 0 14px;
+
+            overflow: hidden;
+
+            border-radius: 999px;
+
+            background: #0b2b39;
+        }
+
+        .sensor-panel small {
+            color: var(--text-muted);
+
+            font-size: 9px;
+        }
+
+        /* =========================================================
+           SURVEY PAGE
+        ========================================================= */
+
+        .survey-panel {
+            padding-bottom: 18px;
+        }
+
+        .survey-map-large {
+            min-height: 510px;
+        }
+
+        .survey-info {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 10px;
+
+            margin-top: 12px;
+        }
+
+        .survey-info > div {
+            padding: 12px;
+
+            border: 1px solid var(--line);
+
+            border-radius: 9px;
+
+            background: #041923;
+        }
+
+        .survey-info span {
+            display: block;
+
+            color: var(--text-muted);
+
+            font-size: 7px;
+
+            letter-spacing: 0.13em;
+        }
+
+        .survey-info strong {
+            display: block;
+
+            margin-top: 6px;
+
+            color: var(--text-soft);
+
+            font-size: 12px;
+        }
+
+        /* =========================================================
+           HISTORY
+        ========================================================= */
+
+        .history-summary {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 14px;
+
+            margin-bottom: 14px;
+        }
+
+        .history-stat {
+            padding: 18px;
+
+            border: 1px solid var(--line);
+
+            border-radius: var(--radius);
+
+            background: var(--panel);
+        }
+
+        .history-stat span {
+            display: block;
+
+            color: var(--text-muted);
+
+            font-size: 7px;
+
+            font-weight: 800;
+
+            letter-spacing: 0.17em;
+        }
+
+        .history-stat strong {
+            display: block;
+
+            margin-top: 8px;
+
+            color: var(--cyan);
+
+            font-size: 22px;
+        }
+
+        .history-panel {
+            padding: 0;
+
+            overflow: hidden;
+        }
+
+        .history-panel .panel-header {
+            padding: 20px 20px 17px;
+
+            margin: 0;
+
+            border-bottom: 1px solid var(--line);
+        }
+
+        .history-table-wrapper {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+        .history-table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 1000px;
+        }
+
+        .history-table th {
+            padding: 13px 11px;
+
+            color: var(--text-muted);
+
+            background:
+                #051923;
+
+            border-bottom: 1px solid var(--line);
+
+            text-align: left;
+
+            font-size: 7px;
+
+            font-weight: 850;
+
+            letter-spacing: 0.13em;
+
+            white-space: nowrap;
+        }
+
+        .history-table td {
+            padding: 12px 11px;
+
+            border-bottom: 1px solid rgba(18, 59, 75, 0.65);
+
+            color: var(--text-soft);
+
+            font-size: 9px;
+
+            white-space: nowrap;
+        }
+
+        .history-table tbody tr:hover {
+            background:
+                rgba(0, 217, 255, 0.025);
+        }
+
+        .history-empty {
+            text-align: center !important;
+
+            padding: 50px !important;
+
+            color: var(--text-muted) !important;
+        }
+
+        /* =========================================================
+           AI ANALYSIS
+        ========================================================= */
+
+        .analysis-grid {
+            display: grid;
+
+            grid-template-columns:
+                minmax(220px, 0.65fr)
+                minmax(300px, 1fr)
+                minmax(250px, 0.9fr);
+
+            gap: 14px;
+        }
+
+        .analysis-score-panel {
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            align-items: flex-start;
+
+            min-height: 300px;
+        }
+
+        .large-score {
+            display: flex;
+
+            align-items: baseline;
+
+            gap: 6px;
+
+            margin: 18px 0;
+        }
+
+        .large-score strong {
+            color: var(--cyan);
+
+            font-size: 62px;
+
+            line-height: 1;
+
+            letter-spacing: -0.06em;
+        }
+
+        .large-score span {
+            color: var(--text-muted);
+
+            font-size: 15px;
+        }
+
+        .score-row {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-top: 18px;
+
+            margin-bottom: 8px;
+
+            color: var(--text-soft);
+
+            font-size: 10px;
+        }
+
+        .score-row strong {
+            color: var(--cyan);
+        }
+
+        .analysis-reason-panel p {
+            min-height: 100px;
+
+            color: var(--text-soft);
+
+            font-size: 12px;
+
+            line-height: 1.7;
+        }
+
+        /* =========================================================
+           NEXT SCAN PAGE
+        ========================================================= */
+
+        .nextscan-grid {
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1fr)
+                minmax(0, 0.75fr);
+
+            gap: 14px;
+        }
+
+        .target-panel {
+            min-height: 350px;
+        }
+
+        .large-description {
+            color: var(--text-soft);
+
+            font-size: 13px;
+
+            line-height: 1.8;
+        }
+
+        .gain-display {
+            margin-top: 20px;
+        }
+
+        .gain-display span {
+            display: block;
+
+            color: var(--text-muted);
+
+            font-size: 7px;
+
+            letter-spacing: 0.15em;
+        }
+
+        .gain-display strong {
+            display: block;
+
+            margin-top: 7px;
+
+            color: var(--green);
+
+            font-size: 30px;
+        }
+
+        /* =========================================================
+           HARDWARE
+        ========================================================= */
+
+        .hardware-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 14px;
+        }
+
+        .hardware-info-panel {
+            grid-column: 1 / -1;
+        }
+
+        .hardware-status {
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            margin: 20px 0;
+        }
+
+        .hardware-dot {
+            width: 12px;
+            height: 12px;
+
+            border-radius: 50%;
+        }
+
+        .hardware-status strong {
+            display: block;
+
+            font-size: 14px;
+        }
+
+        .hardware-status span {
+            display: block;
+
+            margin-top: 4px;
+
+            color: var(--text-muted);
+
+            font-size: 9px;
+        }
+
+        .hardware-detail {
+            display: flex;
+
+            justify-content: space-between;
+
+            padding-top: 13px;
+
+            margin-top: 13px;
+
+            border-top: 1px solid var(--line);
+
+            font-size: 9px;
+        }
+
+        .hardware-detail span {
+            color: var(--text-muted);
+        }
+
+        .hardware-detail strong {
+            color: var(--text-soft);
+        }
+
+        .connect-panel label {
+            display: block;
+
+            margin: 20px 0 8px;
+
+            color: var(--text-muted);
+
+            font-size: 9px;
+        }
+
+        .connect-form {
+            display: grid;
+
+            grid-template-columns: 1fr auto;
+
+            gap: 9px;
+        }
+
+        .connect-form input {
+            width: 100%;
+
+            padding: 10px 12px;
+
+            border: 1px solid var(--line-bright);
+
+            border-radius: 8px;
+
+            outline: none;
+
+            color: var(--text);
+
+            background: #041923;
+        }
+
+        .connect-form input:focus {
+            border-color: var(--cyan);
+        }
+
+        .hardware-message {
+            color: var(--text-muted);
+
+            font-size: 9px;
+
+            line-height: 1.6;
+        }
+
+        .hardware-sensor {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            padding: 14px 0;
+
+            border-bottom: 1px solid var(--line);
+
+            font-size: 10px;
+        }
+
+        .hardware-sensor:last-child {
+            border-bottom: 0;
+        }
+
+        .hardware-sensor span {
+            color: var(--text-soft);
+        }
+
+        .hardware-sensor strong {
+            color: var(--green);
+
+            font-size: 9px;
+        }
+
+        .hardware-sensor.unavailable strong {
+            color: var(--red);
+        }
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        .app-footer {
+            padding: 22px 0 0;
+
+            margin-top: 25px;
+
+            border-top: 1px solid var(--line);
+
+            display: flex;
+
+            justify-content: space-between;
+
+            color: #466777;
+
+            font-size: 8px;
+
+            letter-spacing: 0.12em;
+        }
+
+        /* =========================================================
+           SCROLLBAR
+        ========================================================= */
+
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #163d4d;
+
+            border-radius: 20px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #20576d;
+        }
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 1200px) {
+
+            :root {
+                --sidebar-width: 235px;
+            }
+
+            .metric-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .analysis-grid {
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+            .analysis-reason-panel {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 950px) {
+
+            .dashboard-grid,
+            .nextscan-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .position-content {
+                grid-template-columns: 1fr;
+            }
+
+            .survey-info {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .hardware-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hardware-info-panel {
+                grid-column: auto;
+            }
+        }
+
+        @media (max-width: 720px) {
+
+            :root {
+                --sidebar-width: 0px;
+            }
+
+            .sidebar {
+                position: relative;
+
+                width: 100%;
+
+                min-height: auto;
+
+                border-right: 0;
+
+                border-bottom: 1px solid var(--line);
+            }
+
+            .probe-card {
+                margin-top: 20px;
+            }
+
+            .main-content {
+                margin-left: 0;
+
+                width: 100%;
+            }
+
+            .topbar {
+                position: relative;
+
+                padding: 18px 20px;
+
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+            .topbar-right {
+                width: 100%;
+
+                justify-content: space-between;
+            }
+
+            .content-area {
+                padding: 25px 18px 35px;
+            }
+
+            .metric-grid,
+            .sensor-grid,
+            .history-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .anomaly-main {
+                grid-template-columns: 1fr;
+
+                justify-items: center;
+            }
+
+            .position-data {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .hero-row {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+            .survey-info {
+                grid-template-columns: 1fr;
+            }
+
+            .target-coordinates,
+            .target-big {
+                grid-template-columns: 1fr;
+            }
+
+            .position-data {
+                grid-template-columns: 1fr;
+            }
+
+            .connect-form {
+                grid-template-columns: 1fr;
+            }
+
+            .app-footer {
+                flex-direction: column;
+
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =========================================================
+         SIDEBAR
+    ========================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-mark">
+                SI
+            </div>
+
+            <div class="brand-copy">
+                <strong>SEAFLOOR</strong>
+                <span>INTELLIGENCE</span>
+            </div>
+
+        </div>
+
+
+        <!-- SYSTEM STATUS -->
+
+        <div class="system-card">
+
+            <div
+                id="system-dot"
+                class="status-dot status-normal"
+            ></div>
+
+            <div class="system-copy">
+
+                <strong id="system-connection">
+                    SYSTEM ONLINE
+                </strong>
+
+                <span id="health-source">
+                    SIMULATION
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             NAVIGATION
+        ====================================================== -->
+
+        <nav class="sidebar-nav">
+
+            <div class="nav-section-title">
+                MISSION
+            </div>
+
+
+            <button
+                class="nav-item active"
+                data-page="dashboard"
+            >
+                <span class="nav-icon">◉</span>
+
+                <span>
+                    Overview
+                </span>
+            </button>
+
+
+            <button
+                class="nav-item"
+                data-page="sensors"
+            >
+                <span class="nav-icon">◌</span>
+
+                <span>
+                    Live Sensors
+                </span>
+            </button>
+
+
+            <button
+                class="nav-item"
+                data-page="survey"
+            >
+                <span class="nav-icon">⌖</span>
+
+                <span>
+                    Survey Grid
+                </span>
+            </button>
+
+
+            <button
+                class="nav-item"
+                data-page="history"
+            >
+                <span class="nav-icon">▤</span>
+
+                <span>
+                    Past Data
+                </span>
+            </button>
+
+
+            <div class="nav-section-title">
+                INTELLIGENCE
+            </div>
+
+
+            <button
+                class="nav-item"
+                data-page="analysis"
+            >
+                <span class="nav-icon">◇</span>
+
+                <span>
+                    AI Analysis
+                </span>
+            </button>
+
+
+            <button
+                class="nav-item"
+                data-page="nextscan"
+            >
+                <span class="nav-icon">→</span>
+
+                <span>
+                    Next Scan
+                </span>
+            </button>
+
+
+            <div class="nav-section-title">
+                SYSTEM
+            </div>
+
+
+            <button
+                class="nav-item"
+                data-page="hardware"
+            >
+                <span class="nav-icon">⚙</span>
+
+                <span>
+                    Hardware
+                </span>
+            </button>
+
+        </nav>
+
+
+        <!-- PROBE -->
+
+        <div class="probe-card">
+
+            <div class="probe-indicator"></div>
+
+            <div>
+                <strong>
+                    PROBE-01
+                </strong>
+
+                <span>
+                    Survey Unit
+                </span>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================================================
+         MAIN CONTENT
+    ========================================================== -->
+
+    <main class="main-content">
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div class="page-heading">
+
+                <span class="eyebrow">
+                    SEAFLOOR SURVEY SYSTEM
+                </span>
+
+                <h1 id="page-title">
+                    Mission Dashboard
+                </h1>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <div class="live-time">
+
+                    <strong id="live-clock">
+                        --:--:--
+                    </strong>
+
+                    <span id="live-date">
+                        ---
+                    </span>
+
+                </div>
+
+
+                <div class="mode-badge">
+
+                    <span
+                        class="status-dot status-normal"
+                    ></span>
+
+                    <span>
+                        SIMULATION MODE
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             CONTENT
+        ====================================================== -->
+
+        <div class="content-area">
+
+
+            <!-- =================================================
+                 DASHBOARD
+            ================================================== -->
+
+            <section
+                id="dashboard"
+                class="page active"
+                data-page="dashboard"
+            >
+
+                <div class="hero-row">
+
+                    <div>
+
+                        <span class="section-label">
+                            LIVE MISSION
+                        </span>
+
+                        <h2>
+                            Survey Status
+                        </h2>
+
+                        <p class="section-description">
+                            Real-time monitoring of the active
+                            seafloor survey probe.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        id="refresh-data"
+                        class="secondary-button"
+                    >
+                        ↻ Refresh
+                    </button>
+
+                </div>
+
+
+                <!-- SENSOR METRICS -->
+
+                <div class="metric-grid">
+
+                    <article class="metric-card">
+
+                        <div class="metric-top">
+
+                            <span class="metric-label">
+                                DEPTH
+                            </span>
+
+                            <span class="metric-symbol">
+                                ⇵
+                            </span>
+
+                        </div>
+
+                        <div class="metric-value">
+
+                            <span id="depth-value">
+                                —
+                            </span>
+
+                            <small>
+                                m
+                            </small>
+
+                        </div>
+
+                        <div class="metric-footer">
+
+                            <span class="sensor-state-dot"></span>
+
+                            Pressure sensor
+
+                        </div>
+
+                    </article>
+
+
+                    <article id="inductive-card" class="metric-card inductive-card">
+
+                        <div class="metric-top">
+
+                            <span class="metric-label">
+                                METAL DETECTION
+                            </span>
+
+                            <span class="metric-symbol">
+                                IN
+                            </span>
+
+                        </div>
+
+                        <div class="metric-value">
+
+                            <strong id="inductive-value">
+                                NO METAL
+                            </strong>
+
+                        </div>
+
+                        <div class="metric-footer">
+
+                            <span id="inductive-dot" class="sensor-state-dot"></span>
+
+                            Inductive Sensor
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="metric-card">
+
+                        <div class="metric-top">
+
+                            <span class="metric-label">
+                                TEMPERATURE
+                            </span>
+
+                            <span class="metric-symbol">
+                                °C
+                            </span>
+
+                        </div>
+
+                        <div class="metric-value">
+
+                            <span id="temperature-value">
+                                —
+                            </span>
+
+                            <small>
+                                °C
+                            </small>
+
+                        </div>
+
+                        <div class="metric-footer">
+
+                            <span class="sensor-state-dot"></span>
+
+                            DS18B20
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="metric-card">
+
+                        <div class="metric-top">
+
+                            <span class="metric-label">
+                                MAGNETIC FIELD
+                            </span>
+
+                            <span class="metric-symbol">
+                                ◎
+                            </span>
+
+                        </div>
+
+                        <div class="metric-value">
+
+                            <span id="magnetic-value">
+                                —
+                            </span>
+
+                            <small>
+                                µT
+                            </small>
+
+                        </div>
+
+                        <div class="metric-footer">
+
+                            <span class="sensor-state-dot"></span>
+
+                            QMC5883L
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="metric-card">
+
+                        <div class="metric-top">
+
+                            <span class="metric-label">
+                                EM SIGNAL
+                            </span>
+
+                            <span class="metric-symbol">
+                                ≋
+                            </span>
+
+                        </div>
+
+                        <div class="metric-value">
+
+                            <span id="em-value">
+                                —
+                            </span>
+
+                            <small>
+                                V
+                            </small>
+
+                        </div>
+
+                        <div class="metric-footer">
+
+                            <span class="sensor-state-dot"></span>
+
+                            Analog sensor
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+
+                <!-- INTELLIGENCE -->
+
+                <div class="dashboard-grid">
+
+
+                    <!-- ANOMALY -->
+
+                    <article class="panel anomaly-panel">
+
+                        <div class="panel-header">
+
+                            <div>
+
+                                <span class="panel-label">
+                                    INTELLIGENCE
+                                </span>
+
+                                <h3>
+                                    Anomaly Analysis
+                                </h3>
+
+                            </div>
+
+
+                            <span
+                                id="classification-value"
+                                class="classification history-normal"
+                            >
+                                NORMAL
+                            </span>
+
+                        </div>
+
+
+                        <div class="anomaly-main">
+
+                            <div class="score-circle">
+
+                                <div>
+
+                                    <strong id="anomaly-value">
+                                        —
+                                    </strong>
+
+                                    <span>
+                                        ANOMALY
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="anomaly-details">
+
+                                <div class="detail-row">
+
+                                    <span>
+                                        Confidence
+                                    </span>
+
+                                    <strong id="confidence-value">
+                                        —
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="progress-track">
+
+                                    <div
+                                        id="confidence-progress"
+                                        class="progress-fill"
+                                        style="width:0%"
+                                    ></div>
+
+                                </div>
+
+
+                                <div class="detail-row">
+
+                                    <span>
+                                        Data Source
+                                    </span>
+
+                                    <strong id="data-source">
+                                        —
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="detail-row">
+
+                                    <span>
+                                        Last Update
+                                    </span>
+
+                                    <strong id="last-update">
+                                        —
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="anomaly-bar-section">
+
+                            <div class="bar-header">
+
+                                <span>
+                                    ANOMALY LEVEL
+                                </span>
+
+                                <strong id="anomaly-bar-value">
+                                    Live
+                                </strong>
+
+                            </div>
+
+                            <div class="progress-track large">
+
+                                <div
+                                    id="anomaly-progress"
+                                    class="progress-fill"
+                                    style="width:0%"
+                                ></div>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- NEXT SCAN -->
+
+                    <article class="panel next-panel">
+
+                        <div class="panel-header">
+
+                            <div>
+
+                                <span class="panel-label">
+                                    AI RECOMMENDATION
+                                </span>
+
+                                <h3>
+                                    Next-Best Scan
+                                </h3>
+
+                            </div>
+
+                            <span class="recommendation-icon">
+                                →
+                            </span>
+
+                        </div>
+
+
+                        <div class="target-box">
+
+                            <span class="target-label">
+                                RECOMMENDED TARGET
+                            </span>
+
+
+                            <div class="target-coordinates">
+
+                                <div>
+
+                                    <span>
+                                        X
+                                    </span>
+
+                                    <strong id="next-x">
+                                        —
+                                    </strong>
+
+                                </div>
+
+
+                                <div>
+
+                                    <span>
+                                        Y
+                                    </span>
+
+                                    <strong id="next-y">
+                                        —
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="information-gain">
+
+                            <div class="detail-row">
+
+                                <span>
+                                    Expected information gain
+                                </span>
+
+                                <strong id="information-gain">
+                                    —
+                                </strong>
+
+                            </div>
+
+
+                            <div class="progress-track">
+
+                                <div
+                                    id="information-gain-bar"
+                                    class="progress-fill"
+                                    style="width:0%"
+                                ></div>
+
+                            </div>
+
+                        </div>
+
+
+                        <p
+                            id="next-reason"
+                            class="recommendation-text"
+                        >
+                            Waiting for sensor analysis...
+                        </p>
+
+                    </article>
+
+                </div>
+
+
+                <!-- POSITION -->
+
+                <article class="panel position-panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <span class="panel-label">
+                                POSITION
+                            </span>
+
+                            <h3>
+                                Current Survey Location
+                            </h3>
+
+                        </div>
+
+                        <span class="live-tag">
+                            LIVE
+                        </span>
+
+                    </div>
+
+
+                    <div class="position-content">
+
+
+                        <div class="position-map">
+
+                            <div class="map-axis x-axis"></div>
+
+                            <span class="map-label map-top">
+                                Y
+                            </span>
+
+                            <span class="map-label map-bottom">
+                                X
+                            </span>
+
+
+                            <div
+                                class="probe-marker"
+                                title="Current probe"
+                            >
+                                <span></span>
+                            </div>
+
+
+                            <div
+                                class="next-marker"
+                                title="Recommended next scan"
+                            >
+                                +
+                            </div>
+
+                        </div>
+
+
+                        <div class="position-data">
+
+                            <div class="coordinate-card">
+
+                                <span>
+                                    PROBE X
+                                </span>
+
+                                <strong id="probe-x">
+                                    —
+                                </strong>
+
+                            </div>
+
+
+                            <div class="coordinate-card">
+
+                                <span>
+                                    PROBE Y
+                                </span>
+
+                                <strong id="probe-y">
+                                    —
+                                </strong>
+
+                            </div>
+
+
+                            <div class="coordinate-card">
+
+                                <span>
+                                    LATITUDE
+                                </span>
+
+                                <strong id="latitude">
+                                    —
+                                </strong>
+
+                            </div>
+
+
+                            <div class="coordinate-card">
+
+                                <span>
+                                    LONGITUDE
+                                </span>
+
+                                <strong id="longitude">
+                                    —
+                                </strong>
+
+                            </div>
+
+
+                            <div class="coordinate-card">
+
+                                <span>
+                                    GPS SATELLITES
+                                </span>
+
+                                <strong id="satellites">
+                                    —
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- =================================================
+                 LIVE SENSORS
+            ================================================== -->
+
+            <section
+                id="sensors"
+                class="page"
+                data-page="sensors"
+            >
+
+                <div class="hero-row">
+
+                    <div>
+
+                        <span class="section-label">
+                            SENSOR ARRAY
+                        </span>
+
+                        <h2>
+                            Live Sensor Data
+                        </h2>
+
+                        <p class="section-description">
+                            Current readings reported by the survey probe.
+                        </p>
+
+                    </div>
+
+                    <span class="live-tag">
+                        LIVE
+                    </span>
+
+                </div>
+
+
+                <div class="sensor-grid">
+
+
+                    <article class="panel sensor-panel">
+
+                        <div class="sensor-header">
+
+                            <span>
+                                DEPTH
+                            </span>
+
+                            <strong id="sensor-depth-value">
+                                —
+                            </strong>
+
+                        </div>
+
+                        <div class="sensor-bar">
+
+                            <div
+                                id="sensor-depth-bar"
+                                class="progress-fill"
+                                style="width:0%"
+                            ></div>
+
+                        </div>
+
+                        <small>
+                            Pressure / depth measurement
+                        </small>
+
+                    </article>
+
+
+                    <article class="panel sensor-panel">
+
+                        <div class="sensor-header">
+
+                            <span>
+                                TEMPERATURE
+                            </span>
+
+                            <strong id="sensor-temperature-value">
+                                —
+                            </strong>
+
+                        </div>
+
+                        <div class="sensor-bar">
+
+                            <div
+                                id="sensor-temperature-bar"
+                                class="progress-fill"
+                                style="width:0%"
+                            ></div>
+
+                        </div>
+
+                        <small>
+                            DS18B20 temperature sensor
+                        </small>
+
+                    </article>
+
+
+                    <article class="panel sensor-panel">
+
+                        <div class="sensor-header">
+
+                            <span>
+                                MAGNETIC
+                            </span>
+
+                            <strong id="sensor-magnetic-value">
+                                —
+                            </strong>
+
+                        </div>
+
+                        <div class="sensor-bar">
+
+                            <div
+                                id="sensor-magnetic-bar"
+                                class="progress-fill"
+                                style="width:0%"
+                            ></div>
+
+                        </div>
+
+                        <small>
+                            QMC5883L magnetic field
+                        </small>
+
+                    </article>
+
+
+                    <article class="panel sensor-panel">
+
+                        <div class="sensor-header">
+
+                            <span>
+                                ELECTROMAGNETIC
+                            </span>
+
+                            <strong id="sensor-em-value">
+                                —
+                            </strong>
+
+                        </div>
+
+                        <div class="sensor-bar">
+
+                            <div
+                                id="sensor-em-bar"
+                                class="progress-fill"
+                                style="width:0%"
+                            ></div>
+
+                        </div>
+
+                        <small>
+                            Analog EM signal
+                        </small>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 SURVEY GRID
+            ================================================== -->
+
+            <section
+                id="survey"
+                class="page"
+                data-page="survey"
+            >
+
+                <div class="hero-row">
+
+                    <div>
+
+                        <span class="section-label">
+                            SPATIAL INTELLIGENCE
+                        </span>
+
+                        <h2>
+                            Survey Grid
+                        </h2>
+
+                        <p class="section-description">
+                            Spatial position and next-best survey target.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <article class="panel survey-panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <span class="panel-label">
+                                GRID-01
+                            </span>
+
+                            <h3>
+                                Seafloor Survey Field
+                            </h3>
+
+                        </div>
+
+                        <span>
+                            RESOLUTION 5m
+                        </span>
+
+                    </div>
+
+
+                    <div class="survey-map-large">
+
+                        <div class="map-axis x-axis"></div>
+
+                        <span class="map-label map-top">
+                            Y ↑
+                        </span>
+
+                        <span class="map-label map-bottom">
+                            X →
+                        </span>
+
+
+                        <div class="probe-marker">
+
+                            <span></span>
+
+                        </div>
+
+
+                        <div class="next-marker">
+                            +
+                        </div>
+
+                    </div>
+
+
+                    <div class="survey-info">
+
+                        <div>
+
+                            <span>
+                                CURRENT X
+                            </span>
+
+                            <strong id="survey-x">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                CURRENT Y
+                            </span>
+
+                            <strong id="survey-y">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                LATITUDE
+                            </span>
+
+                            <strong id="survey-lat">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                LONGITUDE
+                            </span>
+
+                            <strong id="survey-lon">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- =================================================
+                 PAST DATA
+            ================================================== -->
+
+            <section
+                id="history"
+                class="page"
+                data-page="history"
+            >
+
+                <div class="hero-row">
+
+                    <div>
+
+                        <span class="section-label">
+                            DATA ARCHIVE
+                        </span>
+
+                        <h2>
+                            Past Sensor Data
+                        </h2>
+
+                        <p class="section-description">
+                            Historical telemetry recorded during the mission.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        id="refresh-history"
+                        class="secondary-button"
+                    >
+                        ↻ Refresh
+                    </button>
+
+                </div>
+
+
+                <div class="history-summary">
+
+                    <div class="history-stat">
+
+                        <span>
+                            TOTAL RECORDS
+                        </span>
+
+                        <strong id="historyCount">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="history-stat">
+
+                        <span>
+                            LATEST SOURCE
+                        </span>
+
+                        <strong id="historySource">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="history-stat">
+
+                        <span>
+                            LATEST STATUS
+                        </span>
+
+                        <strong id="historyStatus">
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <article class="panel history-panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <span class="panel-label">
+                                TELEMETRY LOG
+                            </span>
+
+                            <h3>
+                                Recorded Measurements
+                            </h3>
+
+                        </div>
+
+                        <span class="live-tag">
+                            LAST 200 RECORDS
+                        </span>
+
+                    </div>
+
+
+                    <div class="history-table-wrapper">
+
+                        <table class="history-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        TIME
+                                    </th>
+
+                                    <th>
+                                        SOURCE
+                                    </th>
+
+                                    <th>
+                                        STATUS
+                                    </th>
+
+                                    <th>
+                                        DEPTH
+                                    </th>
+
+                                    <th>
+                                        TEMP
+                                    </th>
+
+                                    <th>
+                                        MAGNETIC
+                                    </th>
+
+                                    <th>
+                                        EM
+                                    </th>
+
+                                    <th>
+                                        X
+                                    </th>
+
+                                    <th>
+                                        Y
+                                    </th>
+
+                                    <th>
+                                        ANOMALY
+                                    </th>
+
+                                    <th>
+                                        CLASSIFICATION
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="historyTableBody">
+
+                                <tr>
+
+                                    <td
+                                        colspan="11"
+                                        class="history-empty"
+                                    >
+                                        Loading historical data...
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- =================================================
+                 AI ANALYSIS
+            ================================================== -->
+
+            <section
+                id="analysis"
+                class="page"
+                data-page="analysis"
+            >
+
+                <div class="hero-row">
+
+                    <div>
+
+                        <span class="section-label">
+                            DECISION ENGINE
+                        </span>
+
+                        <h2>
+                            AI Analysis
+                        </h2>
+
+                        <p class="section-description">
+                            Sensor-fusion based anomaly assessment.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="analysis-grid">
+
+
+                    <article class="panel analysis-score-panel">
+
+                        <span class="panel-label">
+                            OVERALL ANOMALY
+                        </span>
+
+
+                        <div class="large-score">
+
+                            <strong id="analysis-score">
+                                —
+                            </strong>
+
+                            <span>
+                                %
+                            </span>
+
+                        </div>
+
+
+                        <span
+                            id="analysis-classification"
+                            class="classification history-normal"
+                        >
+                            NORMAL
+                        </span>
+
+                    </article>
+
+
+                    <article class="panel">
+
+                        <div class="panel-header">
+
+                            <h3>
+                                Sensor Contribution
+                            </h3>
+
+                        </div>
+
+
+                        <div class="score-row">
+
+                            <span>
+                                Magnetic
+                            </span>
+
+                            <strong id="magnetic-score">
+                                —
+                            </strong>
+
+                        </div>
+
+                        <div class="progress-track">
+
+                            <div
+                                id="magnetic-score-bar"
+                                class="progress-fill"
+                                style="width:0%"
+                            ></div>
+
+                        </div>
+
+
+                        <div class="score-row">
+
+                            <span>
+                                Electromagnetic
+                            </span>
+
+                            <strong id="em-score">
+                                —
+                            </strong>
+
+                        </div>
+
+                        <div class="progress-track">
+
+                            <div
+                                id="em-score-bar"
+                                class="progress-fill"
+                                style="width:0%"
+                            ></div>
+
+                        </div>
+
+
+                        <div class="score-row">
+
+                            <span>
+                                Thermal
+                            </span>
+
+                            <strong id="thermal-score">
+                                —
+                            </strong>
+
+                        </div>
+
+                        <div class="progress-track">
+
+                            <div
+                                id="thermal-score-bar"
+                                class="progress-fill"
+                                style="width:0%"
+                            ></div>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="panel analysis-reason-panel">
+
+                        <span class="panel-label">
+                            ENGINE INTERPRETATION
+                        </span>
+
+
+                        <p id="analysis-reason">
+                            Waiting for sensor analysis...
+                        </p>
+
+
+                        <div class="detail-row">
+
+                            <span>
+                                Model confidence
+                            </span>
+
+                            <strong id="analysis-confidence">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 NEXT BEST SCAN
+            ================================================== -->
+
+            <section
+                id="nextscan"
+                class="page"
+                data-page="nextscan"
+            >
+
+                <div class="hero-row">
+
+                    <div>
+
+                        <span class="section-label">
+                            AUTONOMOUS SURVEY PLANNING
+                        </span>
+
+                        <h2>
+                            Next-Best Scan
+                        </h2>
+
+                        <p class="section-description">
+                            AI-selected location for the next measurement.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="nextscan-grid">
+
+
+                    <article class="panel target-panel">
+
+                        <span class="panel-label">
+                            RECOMMENDED LOCATION
+                        </span>
+
+
+                        <div class="target-big">
+
+                            <div>
+
+                                <span>
+                                    X
+                                </span>
+
+                                <!--
+                                    Mirror of dashboard next-x.
+                                    app.js updates dashboard next-x.
+                                -->
+                                <strong
+                                    data-mirror="next-x"
+                                >
+                                    —
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>
+                                    Y
+                                </span>
+
+                                <strong
+                                    data-mirror="next-y"
+                                >
+                                    —
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="gain-display">
+
+                            <span>
+                                EXPECTED INFORMATION GAIN
+                            </span>
+
+                            <strong
+                                data-mirror="information-gain"
+                            >
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="progress-track large">
+
+                            <div
+                                data-mirror-width="information-gain-bar"
+                                class="progress-fill"
+                                style="width:0%"
+                            ></div>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="panel">
+
+                        <span class="panel-label">
+                            WHY THIS LOCATION?
+                        </span>
+
+
+                        <p
+                            data-mirror="next-reason"
+                            class="large-description"
+                        >
+                            Waiting for sensor analysis...
+                        </p>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 HARDWARE
+            ================================================== -->
+
+            <section
+                id="hardware"
+                class="page"
+                data-page="hardware"
+            >
+
+                <div class="hero-row">
+
+                    <div>
+
+                        <span class="section-label">
+                            SYSTEM INTERFACE
+                        </span>
+
+                        <h2>
+                            Hardware Center
+                        </h2>
+
+                        <p class="section-description">
+                            Connect and inspect the physical survey probe.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="hardware-grid">
+
+
+                    <article class="panel hardware-status-panel">
+
+                        <span class="panel-label">
+                            CONNECTION STATUS
+                        </span>
+
+
+                        <div class="hardware-status">
+
+                            <div
+                                id="hardware-dot"
+                                class="hardware-dot status-offline"
+                            ></div>
+
+
+                            <div>
+
+                                <strong id="hardware-status">
+                                    SIMULATION / OFFLINE
+                                </strong>
+
+                                <span>
+                                    ESP32 serial interface
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="hardware-detail">
+
+                            <span>
+                                Data source
+                            </span>
+
+                            <strong id="hardware-source">
+                                SIMULATION
+                            </strong>
+
+                        </div>
+
+
+                        <div class="hardware-detail">
+
+                            <span>
+                                Port status
+                            </span>
+
+                            <strong id="hardware-port-status">
+                                NOT CONNECTED
+                            </strong>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="panel connect-panel">
+
+                        <span class="panel-label">
+                            CONNECT DEVICE
+                        </span>
+
+
+                        <label for="hardware-port">
+                            Serial Port
+                        </label>
+
+
+                        <div class="connect-form">
+
+                            <input
+                                id="hardware-port"
+                                type="text"
+                                placeholder="COM5"
+                                value="COM5"
+                            >
+
+
+                            <button
+                                id="connect-hardware"
+                                class="primary-button"
+                            >
+                                Connect
+                            </button>
+
+                        </div>
+
+
+                        <p
+                            id="hardware-message"
+                            class="hardware-message"
+                        >
+                            Connect an ESP32 using a USB data cable.
+                        </p>
+
+                    </article>
+
+
+                    <article class="panel hardware-info-panel">
+
+                        <span class="panel-label">
+                            SENSOR CONFIGURATION
+                        </span>
+
+
+                        <div class="hardware-sensor">
+
+                            <span>
+                                DS18B20
+                            </span>
+
+                            <strong>
+                                Temperature
+                            </strong>
+
+                        </div>
+
+
+                        <div class="hardware-sensor">
+
+                            <span>
+                                QMC5883L
+                            </span>
+
+                            <strong>
+                                Magnetic field
+                            </strong>
+
+                        </div>
+
+
+                        <div class="hardware-sensor">
+
+                            <span>
+                                EM SENSOR
+                            </span>
+
+                            <strong>
+                                Analog signal
+                            </strong>
+
+                        </div>
+
+
+                        <div class="hardware-sensor unavailable">
+
+                            <span>
+                                MS5837
+                            </span>
+
+                            <strong>
+                                NOT AVAILABLE
+                            </strong>
+
+                        </div>
+
+
+                        <div class="hardware-sensor">
+
+                            <span>
+                                GPS
+                            </span>
+
+                            <strong>
+                                Position
+                            </strong>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+
+            <!-- FOOTER -->
+
+            <footer class="app-footer">
+
+                <span>
+                    SEAFLOOR INTELLIGENCE SYSTEM
+                </span>
+
+                <span>
+                    PROBE-01 • SURVEY-01
+                </span>
+
+            </footer>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     EXISTING APPLICATION LOGIC
+========================================================== -->
+
+<script>
+    (function () {
+        const applicationScript = document.createElement("script");
+        applicationScript.src = "/static/app.js?v=5.0.2";
+        applicationScript.onerror = function () {
+            const fallbackScript = document.createElement("script");
+            fallbackScript.src = "app.js?v=5.0.2";
+            document.body.appendChild(fallbackScript);
+        };
+        document.body.appendChild(applicationScript);
+    })();
+</script>
+
+
+<!-- =========================================================
+     NEXT-SCAN MIRROR
+     
+     app.js uses the first next-x/next-y/etc. elements.
+     The dashboard contains those real IDs.
+     This script mirrors them to the dedicated Next Scan page.
+========================================================== -->
+
+<script>
+
+(function () {
+
+    function mirrorValues() {
+
+        document
+            .querySelectorAll("[data-mirror]")
+            .forEach(function (element) {
+
+                const sourceId =
+                    element.getAttribute("data-mirror");
+
+                const source =
+                    document.getElementById(sourceId);
+
+                if (!source) {
+                    return;
+                }
+
+                element.textContent =
+                    source.textContent;
+
+            });
+
+
+        document
+            .querySelectorAll("[data-mirror-width]")
+            .forEach(function (element) {
+
+                const sourceId =
+                    element.getAttribute(
+                        "data-mirror-width"
+                    );
+
+                const source =
+                    document.getElementById(sourceId);
+
+                if (!source) {
+                    return;
+                }
+
+                element.style.width =
+                    source.style.width || "0%";
+
+            });
+
+    }
+
+
+    mirrorValues();
+
+
+    setInterval(
+        mirrorValues,
+        250
+    );
+
+})();
+
+</script>
+
+</body>
+</html>
